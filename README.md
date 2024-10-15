@@ -36,8 +36,11 @@ Clone the repository:
 
 bash
 Copy code
+```
 git clone https://github.com/MounirSamyAziz/BlogSolutionCleanArchitecture.git
+```
 Navigate to the project directory:
+
 
 bash
 Copy code
