@@ -1,7 +1,7 @@
-Blog Solution Clean Architecture
+# Blog Solution Clean Architecture
 
-Overview
-Blog Solution is a web application designed using Clean Architecture principles. It serves as a robust platform for creating, managing, and publishing blog posts. The architecture separates concerns and promotes maintainability, testability, and scalability.
+## Overview
+## Blog Solution is a web application designed using Clean Architecture principles. It serves as a robust platform for creating, managing, and publishing blog posts. The architecture separates concerns and promotes maintainability, testability, and scalability.
 
 Features
 User Authentication and Authorization
