@@ -33,34 +33,34 @@ Before you begin, ensure you have the following installed on your machine:
 * SQL Server
 * Visual Studio or any IDE of your choice
 ### Installation
--1- Clone the repository:
+1. Clone the repository:
 ```
 git clone https://github.com/MounirSamyAziz/BlogSolutionCleanArchitecture.git
 ```
-Navigate to the project directory:
+2. Navigate to the project directory:
 
 
 ```
 cd BlogSolutionCleanArchitecture
 ```
-Restore the NuGet packages:
+3. Restore the NuGet packages:
 
 ```
 dotnet restore
 ```
-Set up the database (if using SQL Server):
+4. Set up the database (if using SQL Server):
 
-Update the connection string in the appsettings.json file.
-Run the migrations:
+** Update the connection string in the appsettings.json file.
+** Run the migrations:
 ```
 dotnet ef database update
 ```
-Run the application:
+5. Run the application:
 
 ```
 dotnet run
 ```
-Open your browser and navigate to http://localhost:5000 to access the application.
+6. Open your browser and navigate to http://localhost:5000 to access the application.
 
-API Documentation
-The API documentation can be accessed via Swagger UI once the application is running. Visit http://localhost:5000/swagger to explore the available endpoints.
+## API Documentation
+### The API documentation can be accessed via Swagger UI once the application is running. Visit http://localhost:5000/swagger to explore the available endpoints.
