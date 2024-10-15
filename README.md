@@ -33,35 +33,32 @@ SQL Server
 Visual Studio or any IDE of your choice
 Installation
 Clone the repository:
-
-bash
-Copy code
 ```
 git clone https://github.com/MounirSamyAziz/BlogSolutionCleanArchitecture.git
 ```
 Navigate to the project directory:
 
 
-bash
-Copy code
+```
 cd BlogSolutionCleanArchitecture
+```
 Restore the NuGet packages:
 
-bash
-Copy code
+```
 dotnet restore
+```
 Set up the database (if using SQL Server):
 
 Update the connection string in the appsettings.json file.
 Run the migrations:
-bash
-Copy code
+```
 dotnet ef database update
+```
 Run the application:
 
-bash
-Copy code
+```
 dotnet run
+```
 Open your browser and navigate to http://localhost:5000 to access the application.
 
 API Documentation
