@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlogSolutionClean.Infrastructure\BlogSolutionClean.Infrastructure.csproj" />
+    <ProjectReference Include="..\BlogSolutionClean.Shared\BlogSolutionClean.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
