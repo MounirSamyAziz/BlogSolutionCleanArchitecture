@@ -26,14 +26,14 @@
 * Swagger for API Documentation
 * Unit Testing with xUnit
 ## Getting Started
-Prerequisites
+### Prerequisites
 Before you begin, ensure you have the following installed on your machine:
 
-.NET SDK 6.0
-SQL Server
-Visual Studio or any IDE of your choice
-Installation
-Clone the repository:
+* .NET SDK 6.0
+* SQL Server
+* Visual Studio or any IDE of your choice
+### Installation
+-1- Clone the repository:
 ```
 git clone https://github.com/MounirSamyAziz/BlogSolutionCleanArchitecture.git
 ```
