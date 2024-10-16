@@ -8,172 +8,171 @@ using FluentValidation;
 using FluentValidation.Results;
 using Moq;
 
-namespace BlogSolutionClean.Tests.Unit.Services
+namespace BlogSolutionClean.Tests.Unit.Services;
+
+public class PostServiceTests
 {
-    public class PostServiceTests
+
+    private readonly PostService _postService;
+    private readonly Mock<IPostRepository> _mockPostRepository;
+    private readonly Mock<IAuthorRepository> _mockAuthorRepository;
+    private readonly Mock<IValidator<PostDto>> _validatorMock;
+    private readonly IMapper _mapper;
+
+    public PostServiceTests()
     {
 
-        private readonly PostService _postService;
-        private readonly Mock<IPostRepository> _mockPostRepository;
-        private readonly Mock<IAuthorRepository> _mockAuthorRepository;
-        private readonly Mock<IValidator<PostDto>> _validatorMock;
-        private readonly IMapper _mapper;
+        _mockPostRepository = new Mock<IPostRepository>();
+        _mockAuthorRepository = new Mock<IAuthorRepository>();
+        _validatorMock = new Mock<IValidator<PostDto>>();
 
-        public PostServiceTests()
+        // Set up AutoMapper configuration
+        var config = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
+        _mapper = config.CreateMapper();
+
+        _postService = new PostService(_mapper, _mockPostRepository.Object, _mockAuthorRepository.Object, _validatorMock.Object);
+    }
+
+    [Fact]
+    public async Task CreatePostAsync_ValidPostDto_CreatesPost()
+    {
+        // Arrange
+        var authorId = Guid.NewGuid();
+        var postDto = new PostDto
         {
+            Title = "Sample Post",
+            Description = "Sample Description",
+            Content = "Sample Content",
+            AuthorName = "John",
+            AuthorSurname = "Doe"
+        };
 
-            _mockPostRepository = new Mock<IPostRepository>();
-            _mockAuthorRepository = new Mock<IAuthorRepository>();
-            _validatorMock = new Mock<IValidator<PostDto>>();
+        var author = new Author { Id = authorId, Name = "John", Surname = "Doe" };
+        var createdPost = new Post { Id = Guid.NewGuid(), Title = postDto.Title };
 
-            // Set up AutoMapper configuration
-            var config = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
-            _mapper = config.CreateMapper();
 
-            _postService = new PostService(_mapper, _mockPostRepository.Object, _mockAuthorRepository.Object, _validatorMock.Object);
-        }
+        // Mock validation to return valid result
+        _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
+            .ReturnsAsync(new ValidationResult());
 
-        [Fact]
-        public async Task CreatePostAsync_ValidPostDto_CreatesPost()
+        // Set up mock behaviors
+        _mockAuthorRepository.Setup(repo => repo.GetAuthorByNameAndSurnameAsync(postDto.AuthorName, postDto.AuthorSurname))
+            .ReturnsAsync(author);
+
+        _mockPostRepository.Setup(repo => repo.CreatePostAsync(It.IsAny<Post>()))
+            .ReturnsAsync(createdPost);
+
+        // Act
+        var result = await _postService.CreatePostAsync(postDto);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(createdPost.Id, result.Id);
+        _mockPostRepository.Verify(repo => repo.CreatePostAsync(It.IsAny<Post>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreatePostAsync_AuthorDoesNotExist_CreatesNewAuthorAndPost()
+    {
+        // Arrange
+        var postDto = new PostDto
         {
-            // Arrange
-            var authorId = Guid.NewGuid();
-            var postDto = new PostDto
-            {
-                Title = "Sample Post",
-                Description = "Sample Description",
-                Content = "Sample Content",
-                AuthorName = "John",
-                AuthorSurname = "Doe"
-            };
+            Title = "New Post",
+            Description = "New Description",
+            Content = "New Content",
+            AuthorName = "Jane",
+            AuthorSurname = "Smith"
+        };
 
-            var author = new Author { Id = authorId, Name = "John", Surname = "Doe" };
-            var createdPost = new Post { Id = Guid.NewGuid(), Title = postDto.Title };
+        var createdAuthor = new Author { Id = Guid.NewGuid(), Name = postDto.AuthorName, Surname = postDto.AuthorSurname };
+        var createdPost = new Post { Id = Guid.NewGuid() };
 
 
-            // Mock validation to return valid result
-            _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
-                .ReturnsAsync(new ValidationResult());
+        // Mock validation to return valid result
+        _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
+            .ReturnsAsync(new ValidationResult());
 
-            // Set up mock behaviors
-            _mockAuthorRepository.Setup(repo => repo.GetAuthorByNameAndSurnameAsync(postDto.AuthorName, postDto.AuthorSurname))
-                .ReturnsAsync(author);
+        // Set up mock behaviors
+        _mockAuthorRepository.Setup(repo => repo.GetAuthorByNameAndSurnameAsync(postDto.AuthorName, postDto.AuthorSurname))
+            .ReturnsAsync((Author)null); // Author does not exist
 
-            _mockPostRepository.Setup(repo => repo.CreatePostAsync(It.IsAny<Post>()))
-                .ReturnsAsync(createdPost);
+        _mockAuthorRepository.Setup(repo => repo.CreateAuthorAsync(It.IsAny<Author>()))
+            .ReturnsAsync(createdAuthor);
 
-            // Act
-            var result = await _postService.CreatePostAsync(postDto);
+        _mockPostRepository.Setup(repo => repo.CreatePostAsync(It.IsAny<Post>()))
+            .ReturnsAsync(createdPost);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(createdPost.Id, result.Id);
-            _mockPostRepository.Verify(repo => repo.CreatePostAsync(It.IsAny<Post>()), Times.Once);
-        }
+        // Act
+        var result = await _postService.CreatePostAsync(postDto);
 
-        [Fact]
-        public async Task CreatePostAsync_AuthorDoesNotExist_CreatesNewAuthorAndPost()
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(createdPost.Id, result.Id);
+        _mockAuthorRepository.Verify(repo => repo.CreateAuthorAsync(It.IsAny<Author>()), Times.Once);
+        _mockPostRepository.Verify(repo => repo.CreatePostAsync(It.IsAny<Post>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreatePostAsync_InvalidPostDto_ThrowsException()
+    {
+        // Arrange
+        var postDto = new PostDto
         {
-            // Arrange
-            var postDto = new PostDto
-            {
-                Title = "New Post",
-                Description = "New Description",
-                Content = "New Content",
-                AuthorName = "Jane",
-                AuthorSurname = "Smith"
-            };
-
-            var createdAuthor = new Author { Id = Guid.NewGuid(), Name = postDto.AuthorName, Surname = postDto.AuthorSurname };
-            var createdPost = new Post { Id = Guid.NewGuid() };
-
-
-            // Mock validation to return valid result
-            _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
-                .ReturnsAsync(new ValidationResult());
-
-            // Set up mock behaviors
-            _mockAuthorRepository.Setup(repo => repo.GetAuthorByNameAndSurnameAsync(postDto.AuthorName, postDto.AuthorSurname))
-                .ReturnsAsync((Author)null); // Author does not exist
-
-            _mockAuthorRepository.Setup(repo => repo.CreateAuthorAsync(It.IsAny<Author>()))
-                .ReturnsAsync(createdAuthor);
-
-            _mockPostRepository.Setup(repo => repo.CreatePostAsync(It.IsAny<Post>()))
-                .ReturnsAsync(createdPost);
-
-            // Act
-            var result = await _postService.CreatePostAsync(postDto);
-
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(createdPost.Id, result.Id);
-            _mockAuthorRepository.Verify(repo => repo.CreateAuthorAsync(It.IsAny<Author>()), Times.Once);
-            _mockPostRepository.Verify(repo => repo.CreatePostAsync(It.IsAny<Post>()), Times.Once);
-        }
-
-        [Fact]
-        public async Task CreatePostAsync_InvalidPostDto_ThrowsException()
+            Title = null, // Invalid Title
+            Description = "Sample Description",
+            Content = "Sample Content",
+            AuthorName = "John",
+            AuthorSurname = "Doe"
+        };
+        // Mock validation failure
+        var validationResult = new ValidationResult(new List<ValidationFailure>
         {
-            // Arrange
-            var postDto = new PostDto
-            {
-                Title = null, // Invalid Title
-                Description = "Sample Description",
-                Content = "Sample Content",
-                AuthorName = "John",
-                AuthorSurname = "Doe"
-            };
-            // Mock validation failure
-            var validationResult = new ValidationResult(new List<ValidationFailure>
-            {
-                new ValidationFailure("Title", "Title cannot be null")
-            });
+            new ValidationFailure("Title", "Title cannot be null")
+        });
 
-            _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
-                .ReturnsAsync(validationResult);
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _postService.CreatePostAsync(postDto));
-        }
+        _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
+            .ReturnsAsync(validationResult);
+        // Act & Assert
+        await Assert.ThrowsAsync<ValidationException>(() => _postService.CreatePostAsync(postDto));
+    }
 
-        [Fact]
-        public async Task GetPostByIdAsync_ValidId_ReturnsPostDto()
+    [Fact]
+    public async Task GetPostByIdAsync_ValidId_ReturnsPostDto()
+    {
+        // Arrange
+        var postId = Guid.NewGuid();
+        var post = new Post
         {
-            // Arrange
-            var postId = Guid.NewGuid();
-            var post = new Post
-            {
-                Id = postId,
-                Title = "Sample Post",
-                Description = "Sample Description",
-                Content = "Sample Content",
-                AuthorId = Guid.NewGuid()
-            };
+            Id = postId,
+            Title = "Sample Post",
+            Description = "Sample Description",
+            Content = "Sample Content",
+            AuthorId = Guid.NewGuid()
+        };
 
-            _mockPostRepository.Setup(repo => repo.GetPostByIdAsync(postId, false)).ReturnsAsync(post);
+        _mockPostRepository.Setup(repo => repo.GetPostByIdAsync(postId, false)).ReturnsAsync(post);
 
-            // Act
-            var result = await _postService.GetPostByIdAsync(postId);
+        // Act
+        var result = await _postService.GetPostByIdAsync(postId);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(post.Title, result.Title);
-            _mockPostRepository.Verify(repo => repo.GetPostByIdAsync(postId, false), Times.Once);
-        }
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(post.Title, result.Title);
+        _mockPostRepository.Verify(repo => repo.GetPostByIdAsync(postId, false), Times.Once);
+    }
 
-        [Fact]
-        public async Task GetPostByIdAsync_InvalidId_ReturnsNull()
-        {
-            // Arrange
-            var postId = Guid.NewGuid();
-            _mockPostRepository.Setup(repo => repo.GetPostByIdAsync(postId, false)).ReturnsAsync((Post)null);
+    [Fact]
+    public async Task GetPostByIdAsync_InvalidId_ReturnsNull()
+    {
+        // Arrange
+        var postId = Guid.NewGuid();
+        _mockPostRepository.Setup(repo => repo.GetPostByIdAsync(postId, false)).ReturnsAsync((Post)null);
 
-            // Act
-            var result = await _postService.GetPostByIdAsync(postId);
+        // Act
+        var result = await _postService.GetPostByIdAsync(postId);
 
-            // Assert
-            Assert.Null(result);
-            _mockPostRepository.Verify(repo => repo.GetPostByIdAsync(postId, false), Times.Once);
-        }
+        // Assert
+        Assert.Null(result);
+        _mockPostRepository.Verify(repo => repo.GetPostByIdAsync(postId, false), Times.Once);
     }
 }

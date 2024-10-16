@@ -1,8 +1,6 @@
 using BlogSolutionClean.Domain.Entities.Entities;
-using BlogSolutionClean.Infrastructure.Data;
 using BlogSolutionClean.Shared.Dtos;
 using BlogSolutionClean.Tests.Shared;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
 
 namespace BlogSolutionClean.Tests.Integration.Controllers;
