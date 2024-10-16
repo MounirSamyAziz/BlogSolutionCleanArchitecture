@@ -10,18 +10,23 @@ using Moq;
 
 namespace BlogSolutionClean.Tests.Unit.Services;
 
+/// <summary>
+/// Unit tests for the PostService, testing methods related to post creation and retrieval.
+/// </summary>
 public class PostServiceTests
 {
-
     private readonly PostService _postService;
     private readonly Mock<IPostRepository> _mockPostRepository;
     private readonly Mock<IAuthorRepository> _mockAuthorRepository;
     private readonly Mock<IValidator<PostDto>> _validatorMock;
     private readonly IMapper _mapper;
 
+    /// <summary>
+    /// Initializes a new instance of the PostServiceTests class.
+    /// Sets up the mock repositories, validator, and AutoMapper configuration.
+    /// </summary>
     public PostServiceTests()
     {
-
         _mockPostRepository = new Mock<IPostRepository>();
         _mockAuthorRepository = new Mock<IAuthorRepository>();
         _validatorMock = new Mock<IValidator<PostDto>>();
@@ -30,9 +35,13 @@ public class PostServiceTests
         var config = new MapperConfiguration(cfg => cfg.AddProfile(new MappingProfile()));
         _mapper = config.CreateMapper();
 
+        // Initialize the PostService with mock dependencies
         _postService = new PostService(_mapper, _mockPostRepository.Object, _mockAuthorRepository.Object, _validatorMock.Object);
     }
 
+    /// <summary>
+    /// Test to verify that a valid PostDto creates a post and the correct post is returned.
+    /// </summary>
     [Fact]
     public async Task CreatePostAsync_ValidPostDto_CreatesPost()
     {
@@ -50,12 +59,11 @@ public class PostServiceTests
         var author = new Author { Id = authorId, Name = "John", Surname = "Doe" };
         var createdPost = new Post { Id = Guid.NewGuid(), Title = postDto.Title };
 
-
         // Mock validation to return valid result
         _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
             .ReturnsAsync(new ValidationResult());
 
-        // Set up mock behaviors
+        // Mock the repository to return the author and create the post
         _mockAuthorRepository.Setup(repo => repo.GetAuthorByNameAndSurnameAsync(postDto.AuthorName, postDto.AuthorSurname))
             .ReturnsAsync(author);
 
@@ -71,6 +79,9 @@ public class PostServiceTests
         _mockPostRepository.Verify(repo => repo.CreatePostAsync(It.IsAny<Post>()), Times.Once);
     }
 
+    /// <summary>
+    /// Test to verify that when the author does not exist, a new author is created along with the post.
+    /// </summary>
     [Fact]
     public async Task CreatePostAsync_AuthorDoesNotExist_CreatesNewAuthorAndPost()
     {
@@ -87,12 +98,11 @@ public class PostServiceTests
         var createdAuthor = new Author { Id = Guid.NewGuid(), Name = postDto.AuthorName, Surname = postDto.AuthorSurname };
         var createdPost = new Post { Id = Guid.NewGuid() };
 
-
         // Mock validation to return valid result
         _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
             .ReturnsAsync(new ValidationResult());
 
-        // Set up mock behaviors
+        // Mock the repository to create the author and post
         _mockAuthorRepository.Setup(repo => repo.GetAuthorByNameAndSurnameAsync(postDto.AuthorName, postDto.AuthorSurname))
             .ReturnsAsync((Author)null); // Author does not exist
 
@@ -112,6 +122,9 @@ public class PostServiceTests
         _mockPostRepository.Verify(repo => repo.CreatePostAsync(It.IsAny<Post>()), Times.Once);
     }
 
+    /// <summary>
+    /// Test to verify that when an invalid PostDto is provided, an exception is thrown.
+    /// </summary>
     [Fact]
     public async Task CreatePostAsync_InvalidPostDto_ThrowsException()
     {
@@ -124,6 +137,7 @@ public class PostServiceTests
             AuthorName = "John",
             AuthorSurname = "Doe"
         };
+
         // Mock validation failure
         var validationResult = new ValidationResult(new List<ValidationFailure>
         {
@@ -132,10 +146,14 @@ public class PostServiceTests
 
         _validatorMock.Setup(v => v.ValidateAsync(postDto, default))
             .ReturnsAsync(validationResult);
-        // Act & Assert
+
+        // Act & Assert: Verify that the exception is thrown when validation fails
         await Assert.ThrowsAsync<ValidationException>(() => _postService.CreatePostAsync(postDto));
     }
 
+    /// <summary>
+    /// Test to verify that when a valid post ID is provided, the correct PostDto is returned.
+    /// </summary>
     [Fact]
     public async Task GetPostByIdAsync_ValidId_ReturnsPostDto()
     {
@@ -150,6 +168,7 @@ public class PostServiceTests
             AuthorId = Guid.NewGuid()
         };
 
+        // Mock the repository to return the post
         _mockPostRepository.Setup(repo => repo.GetPostByIdAsync(postId, false)).ReturnsAsync(post);
 
         // Act
@@ -161,11 +180,16 @@ public class PostServiceTests
         _mockPostRepository.Verify(repo => repo.GetPostByIdAsync(postId, false), Times.Once);
     }
 
+    /// <summary>
+    /// Test to verify that when an invalid post ID is provided, null is returned.
+    /// </summary>
     [Fact]
     public async Task GetPostByIdAsync_InvalidId_ReturnsNull()
     {
         // Arrange
         var postId = Guid.NewGuid();
+
+        // Mock the repository to return null (post does not exist)
         _mockPostRepository.Setup(repo => repo.GetPostByIdAsync(postId, false)).ReturnsAsync((Post)null);
 
         // Act
