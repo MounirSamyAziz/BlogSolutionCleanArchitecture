@@ -29,7 +29,7 @@
 ### Prerequisites
 Before you begin, ensure you have the following installed on your machine:
 
-* .NET SDK 6.0
+* .NET SDK 8.0
 * SQL Server
 * Visual Studio or any IDE of your choice
 ### Installation
