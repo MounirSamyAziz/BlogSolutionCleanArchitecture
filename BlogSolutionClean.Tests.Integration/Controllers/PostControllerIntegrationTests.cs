@@ -1,5 +1,5 @@
 using BlogSolutionClean.Domain.Entities.Entities;
-using BlogSolutionClean.Shared.Dtos;
+using BlogSolutionClean.Application.Dtos;
 using BlogSolutionClean.Tests.Shared;
 using System.Net.Http.Json;
 

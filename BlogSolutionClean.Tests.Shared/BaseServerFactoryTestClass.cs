@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BlogSolutionClean.Application.Interfaces;
+using BlogSolutionClean.Application.Contracts.Interfaces;
 using BlogSolutionClean.Infrastructure.Data;
 using BlogSolutionClean.Infrastructure.Interfaces;
 using Microsoft.Extensions.DependencyInjection;

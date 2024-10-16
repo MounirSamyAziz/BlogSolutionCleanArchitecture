@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using BlogSolutionClean.Application.Interfaces;
 using BlogSolutionClean.Domain.Entities.Entities;
 using BlogSolutionClean.Infrastructure.Interfaces;
-using BlogSolutionClean.Shared.Dtos;
+using BlogSolutionClean.Application.Dtos;
 using FluentValidation;
+using BlogSolutionClean.Application.Contracts.Interfaces;
 
 namespace BlogSolutionClean.Application.Services;
 

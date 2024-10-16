@@ -12,11 +12,11 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BlogSolutionClean.API/BlogSolutionClean.API.csproj", "BlogSolutionClean.API/"]
-COPY ["BlogSolutionClean.Application/BlogSolutionClean.Application.csproj", "BlogSolutionClean.Application/"]
-COPY ["BlogSolutionClean.Infrastructure/BlogSolutionClean.Infrastructure.csproj", "BlogSolutionClean.Infrastructure/"]
-COPY ["BlogSolutionClean.Domain.Entities/BlogSolutionClean.Domain.csproj", "BlogSolutionClean.Domain.Entities/"]
-COPY ["BlogSolutionClean.Shared/BlogSolutionClean.Shared.csproj", "BlogSolutionClean.Shared/"]
+run ls
+COPY ["/BlogSolutionClean.API/BlogSolutionClean.API.csproj", "BlogSolutionClean.API/"]
+COPY ["/BlogSolutionClean.Infrastructure/BlogSolutionClean.Infrastructure.csproj", "BlogSolutionClean.Infrastructure.csproj"]
+COPY ["/BlogSolutionClean.Application/BlogSolutionClean.Application.csproj", "BlogSolutionClean.Application/"]
+COPY ["/BlogSolutionClean.Domain.Entities/BlogSolutionClean.Domain.csproj", "BlogSolutionClean.Domain.Entities/"]
 RUN dotnet restore "./BlogSolutionClean.API/BlogSolutionClean.API.csproj"
 COPY . .
 WORKDIR "/src/BlogSolutionClean.API"

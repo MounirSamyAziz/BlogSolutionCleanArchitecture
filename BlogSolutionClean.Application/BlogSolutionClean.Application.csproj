@@ -7,12 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlogSolutionClean.Infrastructure\BlogSolutionClean.Infrastructure.csproj" />
-    <ProjectReference Include="..\BlogSolutionClean.Shared\BlogSolutionClean.Shared.csproj" />
+    <ProjectReference Include="..\BlogSolutionClean.Domain.Entities\BlogSolutionClean.Domain.csproj" />
   </ItemGroup>
 
 </Project>

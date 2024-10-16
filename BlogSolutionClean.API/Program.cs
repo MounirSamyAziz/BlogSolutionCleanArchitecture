@@ -1,5 +1,7 @@
-using BlogSolutionClean.Application;
-using BlogSolutionClean.Shared.Mappings;
+using BlogSolutionClean.Application.Mappings;
+using BlogSolutionClean.Infrastructure;
+using BlogSolutionClean.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,7 @@ builder.Services.AddServices().AddRepositories();
 // in memory database
 builder.Services.AddInMemoryDatabase();
 //// sql server database
-//builder.Services.AddSqlServerDbContext();
+//builder.Services.AddSqlServerDbContext(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 
 // Add Swagger services
@@ -26,6 +28,15 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 var app = builder.Build();
+
+
+// Step 2: Ensure the database is created
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    
+    dbContext.Database.Migrate(); // Apply migrations and create database if it does not exist
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

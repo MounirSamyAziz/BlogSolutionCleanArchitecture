@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BlogSolutionClean.Shared.Dtos;
+namespace BlogSolutionClean.Application.Dtos;
 
 /// <summary>
 /// Data Transfer Object for the Author entity.

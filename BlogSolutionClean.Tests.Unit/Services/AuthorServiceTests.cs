@@ -2,8 +2,8 @@
 using BlogSolutionClean.Application.Services;
 using BlogSolutionClean.Domain.Entities.Entities;
 using BlogSolutionClean.Infrastructure.Interfaces;
-using BlogSolutionClean.Shared.Dtos;
-using BlogSolutionClean.Shared.Mappings;
+using BlogSolutionClean.Application.Dtos;
+using BlogSolutionClean.Application.Mappings;
 using FluentValidation;
 using FluentValidation.Results;
 using Moq;

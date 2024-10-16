@@ -1,9 +1,9 @@
 using BlogSolutionClean.API.Controllers;
-using BlogSolutionClean.Application.Interfaces;
-using BlogSolutionClean.Shared.Dtos;
+using BlogSolutionClean.Application.Dtos;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using BlogSolutionClean.Application.Contracts.Interfaces;
 
 namespace BlogSolutionClean.Tests.Unit.Controllers;
 

@@ -1,8 +1,8 @@
-﻿using BlogSolutionClean.Shared.Dtos;
+﻿using BlogSolutionClean.Application.Dtos;
 using AutoMapper;
 using BlogSolutionClean.Domain.Entities.Entities;
 
-namespace BlogSolutionClean.Shared.Mappings;
+namespace BlogSolutionClean.Application.Mappings;
 
 /// <summary>
 /// AutoMapper profile for mapping between domain entities and DTOs.

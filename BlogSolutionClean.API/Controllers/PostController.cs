@@ -1,6 +1,6 @@
-﻿using BlogSolutionClean.Application.Interfaces;
-using BlogSolutionClean.Shared.Dtos;
+﻿using BlogSolutionClean.Application.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using BlogSolutionClean.Application.Contracts.Interfaces;
 
 namespace BlogSolutionClean.API.Controllers;
 

@@ -1,4 +1,4 @@
-﻿using BlogSolutionClean.Shared.Dtos;
+﻿using BlogSolutionClean.Application.Dtos;
 using FluentValidation;
 
 namespace BlogSolutionClean.Application.Validators;

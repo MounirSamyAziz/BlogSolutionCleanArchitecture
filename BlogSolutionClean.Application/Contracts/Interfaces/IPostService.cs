@@ -1,6 +1,6 @@
-﻿using BlogSolutionClean.Shared.Dtos;
+﻿using BlogSolutionClean.Application.Dtos;
 
-namespace BlogSolutionClean.Application.Interfaces;
+namespace BlogSolutionClean.Application.Contracts.Interfaces;
 
 /// <summary>
 /// Interface for Post service operations.

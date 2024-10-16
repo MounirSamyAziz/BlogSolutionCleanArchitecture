@@ -1,4 +1,4 @@
-﻿namespace BlogSolutionClean.Shared.Dtos;
+﻿namespace BlogSolutionClean.Application.Dtos;
 
 public class PostResponseDto : PostDto
 {

@@ -1,15 +1,15 @@
-﻿using BlogSolutionClean.Application.Interfaces;
+﻿using BlogSolutionClean.Application.Contracts.Interfaces;
 using BlogSolutionClean.Application.Services;
 using BlogSolutionClean.Application.Validators;
 using BlogSolutionClean.Infrastructure.Data;
+using BlogSolutionClean.Infrastructure.Interfaces;
 using BlogSolutionClean.Infrastructure.Repositories;
-using FluentValidation.AspNetCore;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using BlogSolutionClean.Infrastructure.Interfaces;
 
-namespace BlogSolutionClean.Application;
+namespace BlogSolutionClean.Infrastructure;
 
 public static class ServiceCollectionExtensions
 {
@@ -67,6 +67,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
+
         return services;
     }
 
