@@ -64,3 +64,57 @@ dotnet run
 
 ## API Documentation
 ### The API documentation can be accessed via Swagger UI once the application is running. Visit http://localhost:5000/swagger to explore the available endpoints.
+
+# for docker 
+
+## Installation
+
+1. Clone the repository to your local machine:
+
+    ```bash
+    git clone https://github.com/MounirSamyAziz/BlogSolutionCleanArchitecture.git
+    ```
+
+2. Navigate to the project directory:
+
+    ```bash
+    cd BlogSolutionCleanArchitecture
+    ```
+
+## Running the Application
+
+1. Ensure the `Dockerfile` is present in the {Root directory}\BlogSolutionClean.API or adjust the path to the `Dockerfile`.
+
+
+2. Build the Docker image:
+    
+    make sure that you to run the following command run from the root directory
+    
+    ```bash
+    docker build -f ".\BlogSolutionClean.API\Dockerfile" --force-rm -t blog-solution "."
+    ```
+
+3. Run the Docker container:
+
+    ```bash
+    docker run -it --rm -p 32769:8080 -p 32768:8081 --name [your continer name] blog-solution 
+    ```
+
+    - The application will be available at `http://localhost:32769`. If port `32769` is already in use, you can change it by modifying the `-p` option.
+    - The application will be available at `https://localhost:32768`. If port `32768` is already in use, you can change it by modifying the `-p` option.
+
+## Stopping the Application
+
+To stop the running Docker container:
+
+1. List all running Docker containers:
+
+    ```bash
+    docker ps
+    ```
+
+2. Copy the container ID of the running application and stop it:
+
+    ```bash
+    docker stop <container_id>
+    ```
